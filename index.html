@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aurora Bean — Coffee & Matcha, poured to order</title>
+<meta name="description" content="Aurora Bean Atelier — cold brew and ceremonial matcha, poured to order.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--dim:rgba(255,255,255,.74);
+ --sans:'Inter Tight',system-ui,sans-serif;--serif:'Instrument Serif',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+ --espresso:#1c1208;--cream:#f3e9d8;--lime:#d6ec7c;--terra:#c8531f}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#1c1208;scroll-behavior:auto}
+body{background:#1c1208;color:#fff;font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+/* ============ fixed header ============ */
+.nav{position:fixed;z-index:30;top:0;left:0;right:0;padding:clamp(16px,2.2vw,32px);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#fff;pointer-events:none;transition:color .4s}
+.nav.light{color:#1c1208}
+.nav>*{pointer-events:auto}
+.nav a{text-decoration:none;position:relative}
+.nav .l{display:flex;gap:clamp(14px,2.4vw,34px)}
+.nav .l a::after,.order::after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .35s ease}
+.nav .l a:hover::after,.order:hover::after{transform:scaleX(1)}
+.logo{display:flex;align-items:center;gap:9px;font:700 1.05rem/1 var(--sans)!important;letter-spacing:-.03em!important;text-transform:none!important}
+.logo svg{width:22px;height:22px}
+.order{justify-self:end;display:inline-flex;gap:8px;align-items:center}
+.switch{position:fixed;z-index:30;top:clamp(58px,6.6vw,84px);left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px;border-radius:999px;background:rgba(20,12,4,.38);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);transition:opacity .4s,visibility .4s}
+.switch.hide{opacity:0;visibility:hidden}
+.switch a{font:500 .68rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.75);text-decoration:none;padding:9px 14px;border-radius:999px;transition:background .35s,color .35s}
+.switch a.on{background:#fff;color:#1c1208}
+@media(max-width:700px){.nav .l a:not(:first-child){display:none}.nav{grid-template-columns:auto 1fr auto}.logo{justify-self:center}}
+
+/* ============ scroll-scrubbed heroes ============ */
+.track{position:relative;height:520vh}
+.stage{position:sticky;top:0;height:100svh;min-height:560px;overflow:hidden;background:var(--bg)}
+video,.poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 55%}
+.poster{background-size:cover;background-position:center}
+.shade{position:absolute;inset:0;pointer-events:none;
+ background:
+  linear-gradient(90deg,rgba(var(--sh),.66) 0%,rgba(var(--sh),.3) 38%,rgba(var(--sh),0) 62%),
+  linear-gradient(0deg,rgba(var(--sh),.58) 0%,rgba(var(--sh),0) 34%),
+  linear-gradient(180deg,rgba(var(--sh),.4) 0%,rgba(var(--sh),0) 22%)}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.12;mix-blend-mode:overlay;
+ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .7 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.ui{position:absolute;inset:0;padding:clamp(16px,2.2vw,32px);padding-top:clamp(96px,11vw,130px);display:flex;flex-direction:column}
+.eyebrow{display:inline-flex;gap:10px;align-items:center;font:500 .72rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.eyebrow b{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(255,255,255,.18)}50%{box-shadow:0 0 0 9px rgba(255,255,255,0)}}
+h1{margin-top:16px;font:800 clamp(3rem,9vw,10rem)/.86 var(--sans);letter-spacing:-.06em;text-transform:uppercase;text-shadow:0 2px 30px rgba(0,0,0,.2)}
+h1 .ln{display:block;overflow:hidden;padding-bottom:.05em}
+h1 .ln>span{display:inline-block;transform:translateY(105%);transition:transform 1.1s cubic-bezier(.16,.9,.2,1)}
+.track.in h1 .ln>span{transform:none}
+.track.in h1 .ln:nth-child(2)>span{transition-delay:.12s}
+h1 em{font:italic 400 1em/.8 var(--serif);letter-spacing:-.02em;text-transform:none;color:var(--accent)}
+.lede{margin-top:clamp(14px,2.6vh,26px);max-width:330px;font:500 .94rem/1.5 var(--sans);color:var(--dim)}
+.bottom{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
+.steps{list-style:none;min-width:min(320px,100%)}
+.steps li{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:baseline;padding:11px 0;border-top:1px solid rgba(255,255,255,.28);font:500 .76rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);transition:color .35s,padding .4s cubic-bezier(.2,.9,.2,1)}
+.steps li:last-child{border-bottom:1px solid rgba(255,255,255,.28)}
+.steps li.on{color:#fff;padding-left:12px}
+.steps li.on span:first-child{color:var(--accent)}
+.steps li.done{color:rgba(255,255,255,.8)}
+.info{text-align:right;max-width:380px;opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .8s cubic-bezier(.16,.9,.2,1)}
+.info.show{opacity:1;transform:none}
+.name{font:800 clamp(1.9rem,4vw,4rem)/.92 var(--sans);letter-spacing:-.055em;text-transform:uppercase}
+.name em{font:italic 400 1em/.9 var(--serif);text-transform:none;letter-spacing:-.02em;color:var(--accent)}
+.notes{margin-top:12px;font:500 .9rem/1.45 var(--sans);color:var(--dim)}
+.price{display:inline-block;margin-top:14px;font:500 .78rem/1 var(--mono);letter-spacing:.1em;padding:8px 12px;border:1px solid #fff;border-radius:999px}
+.bar{position:absolute;right:clamp(16px,2.2vw,32px);top:50%;width:2px;height:120px;transform:translateY(-50%);background:rgba(255,255,255,.25);border-radius:2px;overflow:hidden}
+.bar i{position:absolute;inset:0;background:#fff;transform-origin:top;transform:scaleY(0)}
+.hint{position:absolute;left:50%;bottom:clamp(14px,2vw,28px);transform:translateX(-50%);font:500 .68rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:8px;transition:opacity .4s}
+.hint::after{content:"";width:1px;height:26px;background:linear-gradient(#fff,transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ============ marquee ============ */
+.marq{overflow:hidden;white-space:nowrap;background:var(--lime);color:#1c1208;padding:18px 0;font:800 clamp(1.4rem,3.4vw,2.6rem)/1 var(--sans);letter-spacing:-.04em;text-transform:uppercase;position:relative;z-index:2}
+.marq div{display:inline-flex;gap:clamp(24px,3vw,48px);animation:mq 28s linear infinite;padding-left:clamp(24px,3vw,48px)}
+.marq span:nth-child(even){font-family:var(--serif);font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.02em}
+@keyframes mq{to{transform:translateX(-50%)}}
+.marq.dark{background:#1c1208;color:var(--cream)}
+
+/* ============ generic sections ============ */
+section.page{position:relative;padding:clamp(80px,12vw,160px) clamp(16px,2.2vw,32px)}
+.wrap{max-width:1360px;margin:0 auto}
+.kicker{display:inline-flex;gap:10px;align-items:center;font:500 .72rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.kicker::before{content:"//"}
+h2{margin-top:18px;font:800 clamp(2.6rem,7.4vw,8rem)/.88 var(--sans);letter-spacing:-.06em;text-transform:uppercase}
+h2 em{font:italic 400 1em/.8 var(--serif);text-transform:none;letter-spacing:-.02em}
+.rv{opacity:0;transform:translateY(34px);transition:opacity .9s ease,transform 1s cubic-bezier(.16,.9,.2,1)}
+.rv.in{opacity:1;transform:none}
+
+/* story */
+#story{background:#1c1208;color:var(--cream)}
+#story h2 em{color:var(--lime)}
+.story-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(32px,6vw,100px);margin-top:clamp(40px,6vw,80px);align-items:start}
+.story-grid p{font:500 clamp(1rem,1.3vw,1.2rem)/1.6 var(--sans);color:rgba(243,233,216,.72);max-width:520px}
+.story-grid p+p{margin-top:18px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(243,233,216,.18);border:1px solid rgba(243,233,216,.18)}
+.stat{background:#1c1208;padding:clamp(20px,2.6vw,36px)}
+.stat b{display:block;font:800 clamp(2.6rem,5.4vw,5.6rem)/1 var(--sans);letter-spacing:-.06em;color:var(--lime)}
+.stat b small{font-size:.4em;letter-spacing:-.02em;margin-left:4px;color:var(--cream)}
+.stat span{display:block;margin-top:8px;font:500 .72rem/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(243,233,216,.6)}
+@media(max-width:860px){.story-grid{grid-template-columns:1fr}}
+
+/* menu */
+#menu{background:var(--cream);color:#1c1208}
+#menu h2 em{color:var(--terra)}
+.menu-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{font:500 .74rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:12px 18px;border-radius:999px;border:1px solid #1c1208;background:transparent;color:#1c1208;cursor:pointer;transition:background .3s,color .3s}
+.tab[aria-selected=true]{background:#1c1208;color:var(--cream)}
+.menu-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(24px,5vw,80px);margin-top:clamp(32px,5vw,64px);align-items:start}
+.list{list-style:none}
+.item{display:grid;grid-template-columns:1fr auto;gap:6px 20px;padding:clamp(16px,1.8vw,24px) 0;border-top:1px solid rgba(28,18,8,.22);cursor:pointer;transition:padding .4s cubic-bezier(.2,.9,.2,1)}
+.item:last-child{border-bottom:1px solid rgba(28,18,8,.22)}
+.item h3{font:800 clamp(1.4rem,2.6vw,2.4rem)/1 var(--sans);letter-spacing:-.05em;text-transform:uppercase;transition:color .3s}
+.item .pr{font:500 .9rem/1 var(--mono);letter-spacing:.06em;align-self:center}
+.item p{grid-column:1/-1;font:500 .92rem/1.45 var(--sans);color:rgba(28,18,8,.62);max-width:480px}
+.item.on{padding-left:14px}
+.item.on h3{color:var(--terra)}
+.preview{position:sticky;top:100px;aspect-ratio:4/5;border-radius:28px;overflow:hidden;background:#2a1a0c}
+.preview img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06);transition:opacity .5s ease,transform .9s cubic-bezier(.16,.9,.2,1)}
+.preview img.on{opacity:1;transform:none}
+.preview .tag{position:absolute;left:16px;bottom:16px;z-index:2;font:500 .7rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.9);color:#1c1208;padding:9px 12px;border-radius:999px}
+@media(max-width:860px){.menu-grid{grid-template-columns:1fr}.preview{position:relative;top:0;order:-1;aspect-ratio:1/1}.preview img{object-position:center 30%}}
+
+/* promo */
+#promo{background:var(--lime);color:#1c1208;overflow:hidden}
+#promo .wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(24px,5vw,80px);align-items:center}
+#promo h2{font-size:clamp(3rem,9.4vw,10.4rem)}
+#promo h2 em{color:#3a5a05}
+.deal{background:#1c1208;color:var(--cream);border-radius:32px;padding:clamp(24px,3vw,44px);transform:rotate(2deg);box-shadow:0 30px 60px rgba(28,18,8,.22)}
+.deal .big{font:800 clamp(3.4rem,7vw,7rem)/.9 var(--sans);letter-spacing:-.06em;color:var(--lime)}
+.deal .big small{font-size:.38em;margin-left:6px;color:var(--cream)}
+.deal p{margin-top:14px;font:500 1rem/1.5 var(--sans);color:rgba(243,233,216,.78)}
+.deal .meta{margin-top:20px;font:500 .72rem/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(243,233,216,.55)}
+@media(max-width:860px){#promo .wrap{grid-template-columns:1fr}.deal{transform:none}}
+
+/* strength */
+#strength{background:var(--terra);color:var(--cream);text-align:center;overflow:hidden}
+#strength .wrap{display:flex;flex-direction:column;align-items:center}
+#strength h2 em{color:#ffd9a0}
+.orb{position:relative;width:min(56vw,360px);aspect-ratio:1;margin:clamp(28px,4vw,56px) 0 0;border-radius:50%;display:grid;place-items:center;transition:background .5s,transform .6s cubic-bezier(.2,.9,.2,1);box-shadow:0 40px 80px rgba(0,0,0,.28),inset -22px -30px 60px rgba(0,0,0,.25),inset 16px 16px 40px rgba(255,255,255,.18)}
+.orb span{font:800 clamp(1.4rem,3vw,2.4rem)/1 var(--sans);letter-spacing:-.04em;text-transform:uppercase;text-align:center;padding:0 20px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.3)}
+.range{width:min(520px,100%);margin-top:clamp(28px,4vw,48px)}
+.range input{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:rgba(243,233,216,.35);outline:none}
+.range input::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:34px;border-radius:50%;background:var(--cream);border:0;cursor:grab;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.range input::-moz-range-thumb{width:34px;height:34px;border-radius:50%;background:var(--cream);border:0;cursor:grab}
+.range .lab{display:flex;justify-content:space-between;margin-top:14px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.rec{margin-top:26px;font:500 1.1rem/1.5 var(--sans);max-width:480px;min-height:3.2em}
+.rec b{font-weight:800}
+
+/* visit + order */
+#visit{background:#1c1208;color:var(--cream)}
+#visit h2 em{color:var(--lime)}
+.visit-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,80px);margin-top:clamp(36px,5vw,72px)}
+.card{border:1px solid rgba(243,233,216,.22);border-radius:28px;padding:clamp(22px,2.8vw,40px)}
+.card h3{font:800 1.5rem/1 var(--sans);letter-spacing:-.04em;text-transform:uppercase;margin-bottom:18px}
+.hours{list-style:none}
+.hours li{display:flex;justify-content:space-between;padding:11px 0;border-top:1px dashed rgba(243,233,216,.22);font:500 .95rem/1 var(--sans)}
+.hours li span:last-child{font-family:var(--mono);font-size:.82rem;letter-spacing:.06em}
+.addr{margin-top:22px;font:500 1.05rem/1.55 var(--sans);color:rgba(243,233,216,.8)}
+form{display:grid;gap:14px}
+label{display:grid;gap:8px;font:500 .7rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:rgba(243,233,216,.62)}
+input[type=text],select{width:100%;padding:15px 16px;border-radius:14px;border:1px solid rgba(243,233,216,.28);background:rgba(243,233,216,.06);color:var(--cream);font:500 1rem/1.2 var(--sans);outline:none;transition:border-color .3s}
+input[type=text]:focus,select:focus{border-color:var(--lime)}
+select option{color:#1c1208}
+.btn{margin-top:6px;padding:17px 24px;border:0;border-radius:999px;background:var(--lime);color:#1c1208;font:800 .95rem/1 var(--sans);letter-spacing:-.01em;cursor:pointer;transition:transform .3s cubic-bezier(.2,.9,.2,1.4)}
+.btn:hover{transform:translateY(-2px) scale(1.02)}
+.ok{margin-top:6px;min-height:1.5em;font:500 1rem/1.5 var(--sans);color:var(--lime)}
+@media(max-width:860px){.visit-grid{grid-template-columns:1fr}}
+footer{background:#120b05;color:rgba(243,233,216,.6);padding:34px clamp(16px,2.2vw,32px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:500 .72rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase}
+
+/* mobile heroes */
+@media(max-width:860px){
+ h1{font-size:clamp(2.3rem,11.5vw,4.4rem)}
+ .lede{display:none}
+ .bottom{flex-direction:column-reverse;align-items:stretch;gap:12px}
+ .info{text-align:left;max-width:none}
+ .name{font-size:1.9rem}.notes{margin-top:6px;font-size:.82rem}.price{margin-top:8px}
+ .steps{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;column-gap:10px;min-width:0}
+ .steps li{grid-template-columns:1fr;padding:9px 0;font-size:.58rem;border-bottom:0}
+ .steps li span:not(:nth-child(2)){display:none}
+ .steps li.on{padding-left:0}
+ .bar,.hint{display:none}
+ .stage{background:linear-gradient(var(--m1),var(--m2))}
+ video,.poster{top:26%;height:74%;object-position:50% 50%;-webkit-mask-image:linear-gradient(transparent 0,#000 16%);mask-image:linear-gradient(transparent 0,#000 16%)}
+ .ui{padding-top:112px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}h1 .ln>span{transform:none}.info{opacity:1;transform:none}.rv{opacity:1;transform:none}.track{height:100svh}}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="l"><a href="#menu">Menu</a><a href="#story">Our story</a><a href="#strength">Find yours</a><a href="#visit">Visit</a></div>
+  <a class="logo" href="#top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9"/><path d="M12 12C12 8 9 5 4 5c0 4 3 7 8 7z"/><path d="M12 14c0-4 3-7 8-7 0 4-3 7-8 7z"/></svg>aurora bean</a>
+  <a class="order" href="#visit">Order ahead <span aria-hidden="true">↗</span></a>
+</nav>
+<div class="switch" id="switch"><a href="#coldbrew" data-t="coldbrew" class="on">Cold brew</a><a href="#matcha" data-t="matcha">Matcha</a></div>
+
+<!-- ====== HERO 1: cold brew ====== -->
+<div class="track" id="coldbrew" data-nav="dark" data-stops="0,.22,.45,.62" style="--bg:#5b3412;--m1:#5b3412;--m2:#9a6322;--sh:40,18,4;--accent:#ffd9a0">
+  <section class="stage" id="top">
+    <div class="poster" style="background-image:url(poster.jpg)"></div>
+    <video muted playsinline preload="auto" tabindex="-1" aria-hidden="true"><source src="pour.mp4" type="video/mp4"><source src="pour.webm" type="video/webm"></video>
+    <div class="shade"></div><div class="grain"></div>
+    <div class="ui">
+      <div class="eyebrow"><b></b>Specialty coffee atelier</div>
+      <h1><span class="ln"><span>Poured to order.</span></span><span class="ln"><span>Layer by <em>layer.</em></span></span></h1>
+      <p class="lede">Scroll to build your cup: ice, cold brew, cream, and a finishing touch.</p>
+      <div class="bottom">
+        <ol class="steps"><li><span>01</span><span>Ice</span><span>0°</span></li><li><span>02</span><span>Cold brew</span><span>18 h</span></li><li><span>03</span><span>Sweet cream</span><span></span></li><li><span>04</span><span>Finish</span><span></span></li></ol>
+        <div class="info"><div class="name">Cream <em>cold brew</em></div><p class="notes">Steeped for 18 hours, poured over ice, finished with sweet cream and a dusting of cocoa. 16 oz.</p><span class="price">$6.50</span></div>
+      </div>
+    </div>
+    <div class="bar" aria-hidden="true"><i></i></div><div class="hint">Scroll</div>
+  </section>
+</div>
+
+<!-- ====== HERO 2: matcha ====== -->
+<div class="track" id="matcha" data-nav="dark" data-stops="0,.2,.42,.8" style="--bg:#66741c;--m1:#4f5c14;--m2:#7d8c35;--sh:18,28,4;--accent:#e9f7b4">
+  <section class="stage">
+    <div class="poster" style="background-image:url(matcha-poster.jpg)"></div>
+    <video muted playsinline preload="auto" tabindex="-1" aria-hidden="true"><source src="matcha.mp4" type="video/mp4"><source src="matcha.webm" type="video/webm"></video>
+    <div class="shade"></div><div class="grain"></div>
+    <div class="ui">
+      <div class="eyebrow"><b></b>Ceremonial grade</div>
+      <h1><span class="ln"><span>Whisked to order.</span></span><span class="ln"><span>Poured <em>slow.</em></span></span></h1>
+      <p class="lede">Scroll to build your cup: ceremonial matcha, fresh oat milk, and nothing else.</p>
+      <div class="bottom">
+        <ol class="steps"><li><span>01</span><span>Matcha</span><span>3 g</span></li><li><span>02</span><span>Whisk</span><span>80°</span></li><li><span>03</span><span>Oat milk</span><span></span></li><li><span>04</span><span>Finish</span><span></span></li></ol>
+        <div class="info"><div class="name">Oat milk <em>matcha</em></div><p class="notes">Ceremonial matcha whisked smooth and finished with chilled oat milk. Earthy, creamy, bright. 16 oz.</p><span class="price">$6.75</span></div>
+      </div>
+    </div>
+    <div class="bar" aria-hidden="true"><i></i></div><div class="hint">Scroll</div>
+  </section>
+</div>
+
+<div class="marq" aria-hidden="true"><div id="mq1"></div></div>
+
+<!-- ====== STORY ====== -->
+<section class="page" id="story" data-nav="dark">
+  <div class="wrap">
+    <span class="kicker rv">Our story</span>
+    <h2 class="rv">Two ways to start.<br>Both <em>slow.</em></h2>
+    <div class="story-grid">
+      <div class="rv">
+        <p>Aurora Bean is a small atelier built around two drinks we could never find done properly: cold brew steeped for eighteen hours, and matcha whisked to order.</p>
+        <p>No syrups from a pump, no shortcuts. We pour in front of you, layer by layer, because the way a drink is made is part of how it tastes.</p>
+      </div>
+      <div class="stats rv">
+        <div class="stat"><b data-count="18">0</b><span>Hours steeping each batch</span></div>
+        <div class="stat"><b data-count="3">0<small>g</small></b><span>Ceremonial matcha per cup</span></div>
+        <div class="stat"><b data-count="0">0</b><span>Syrups from a pump</span></div>
+        <div class="stat"><b data-count="7">0<small>am</small></b><span>Doors open daily</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MENU ====== -->
+<section class="page" id="menu" data-nav="light">
+  <div class="wrap">
+    <div class="menu-top">
+      <div><span class="kicker rv">The menu</span><h2 class="rv">What<br>we <em>pour.</em></h2></div>
+      <div class="tabs rv" id="tabs" role="tablist"></div>
+    </div>
+    <div class="menu-grid">
+      <ul class="list" id="list"></ul>
+      <div class="preview" id="preview" aria-hidden="true"><span class="tag" id="ptag"></span></div>
+    </div>
+  </div>
+</section>
+
+<div class="marq dark" aria-hidden="true"><div id="mq2"></div></div>
+
+<!-- ====== PROMO ====== -->
+<section class="page" id="promo" data-nav="light">
+  <div class="wrap">
+    <div><span class="kicker rv">This week</span><h2 class="rv">Pour<br>two. <em>Save.</em></h2></div>
+    <div class="deal rv">
+      <div class="big">$11<small>for two</small></div>
+      <p>One cold brew and one matcha, any size, every weekday afternoon.</p>
+      <div class="meta">Mon – Fri · 2–5 pm · Dine in or pickup</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== STRENGTH ====== -->
+<section class="page" id="strength" data-nav="dark">
+  <div class="wrap">
+    <span class="kicker rv">Find yours</span>
+    <h2 class="rv">How strong<br>today<em>?</em></h2>
+    <div class="orb rv" id="orb"><span id="orbtxt">Smooth</span></div>
+    <div class="range rv"><input type="range" id="rng" min="1" max="5" value="2" step="1" aria-label="Strength"><div class="lab"><span>Gentle</span><span>Bold</span></div></div>
+    <p class="rec" id="rec"></p>
+  </div>
+</section>
+
+<!-- ====== VISIT / ORDER ====== -->
+<section class="page" id="visit" data-nav="dark">
+  <div class="wrap">
+    <span class="kicker rv">Come say hi</span>
+    <h2 class="rv">Order ahead.<br>Skip the <em>line.</em></h2>
+    <div class="visit-grid">
+      <div class="card rv">
+        <h3>Pickup order</h3>
+        <form id="form" autocomplete="off">
+          <label>Your name<input type="text" id="fn" required placeholder="Alex"></label>
+          <label>Drink<select id="fd"></select></label>
+          <label>Pickup time<select id="ft"></select></label>
+          <button class="btn" type="submit">Place pickup order</button>
+          <div class="ok" id="ok" role="status"></div>
+        </form>
+      </div>
+      <div class="card rv">
+        <h3>Find us</h3>
+        <ul class="hours" id="hours"></ul>
+        <p class="addr">128 Fulton Market<br>Chicago, IL 60607<br>hello@aurorabean.example</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer><span>© <span id="yr"></span> Aurora Bean Atelier</span><span>Cold brew · Matcha · Poured to order</span></footer>
+
+<script>
+(function(){
+  var $=function(s,r){return (r||document).querySelector(s)};
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  $('#yr').textContent=new Date().getFullYear();
+
+  /* ---------- marquees ---------- */
+  function fill(id,words){var h='';for(var k=0;k<2;k++)words.forEach(function(w){h+='<span>'+w+'</span><span>✦</span>'});$(id).innerHTML=h}
+  fill('#mq1',['Cold brew','Ceremonial matcha','Poured to order','Not too sweet','Oat milk','Eighteen hours']);
+  fill('#mq2',['Layer by layer','Whisked fresh','Cream cold brew','Slow mornings','Matcha','Poured to order']);
+
+  /* ---------- menu ---------- */
+  var MENU={
+   'Coffee':{img:['img/black.jpg','img/orange.jpg','img/tonic.jpg'],items:[
+     ['Classic cold brew','Eighteen hours, black, with a golden crema.','$5.00'],
+     ['Orange cold brew','Cold brew floated over fresh orange juice.','$6.50'],
+     ['Lemon coffee tonic','Cold brew over sparkling tonic and lemon.','$6.75']]},
+   'Matcha':{img:['img/matcha.jpg','img/matcha.jpg'],items:[
+     ['Strawberry matcha','Fresh strawberry puree under whisked matcha.','$7.25'],
+     ['Oat milk matcha','Ceremonial matcha, oat milk, nothing else.','$6.75']]},
+   'Fruity':{img:['img/straw.jpg','img/cherry.jpg'],items:[
+     ['Strawberry mint cooler','Strawberry, mint and ice, lightly sparkling.','$5.75'],
+     ['Cherry sparkler','Tart cherry and citrus over ice.','$5.75']]},
+   'Warm':{img:['img/choc.jpg','img/latte.jpg'],items:[
+     ['Hot chocolate','Dark cocoa, steamed milk, a little foam.','$5.00'],
+     ['Layered latte','Espresso between warm milk and silky foam.','$5.50']]}
+  };
+
+
+  var cats=Object.keys(MENU),cat=cats[0],tabs=$('#tabs'),list=$('#list'),prev=$('#preview'),ptag=$('#ptag'),imgs=[];
+  var allDrinks=[];cats.forEach(function(c){MENU[c].items.forEach(function(i){allDrinks.push(i[0])})});
+  var seen={};
+  cats.forEach(function(c){MENU[c].img.forEach(function(s){if(!seen[s]){seen[s]=1;var im=document.createElement('img');im.src=s;im.alt='';im.dataset.s=s;prev.insertBefore(im,ptag);imgs.push(im)}})});
+  var BG={'img/black.jpg':'#3a2214','img/orange.jpg':'#efe6dc','img/tonic.jpg':'#d9b25a','img/matcha.jpg':'#f6e4da','img/straw.jpg':'#f8d9dd','img/cherry.jpg':'#b8501a','img/choc.jpg':'#6a2a1c','img/latte.jpg':'#ecc7a6'};
+  function showImg(src){prev.style.background=BG[src]||'#2a1a0c';imgs.forEach(function(im){im.classList.toggle('on',im.dataset.s===src)})}
+  function renderTabs(){tabs.innerHTML='';cats.forEach(function(c){var b=document.createElement('button');b.className='tab';b.type='button';b.setAttribute('role','tab');b.setAttribute('aria-selected',c===cat);b.textContent=c;b.onclick=function(){cat=c;renderTabs();renderList()};tabs.appendChild(b)})}
+  function renderList(){
+    list.innerHTML='';var m=MENU[cat];
+    m.items.forEach(function(it,i){
+      var li=document.createElement('li');li.className='item';li.tabIndex=0;
+      li.innerHTML='<h3>'+it[0]+'</h3><span class="pr">'+it[2]+'</span><p>'+it[1]+'</p>';
+      function on(){[].forEach.call(list.children,function(x){x.classList.remove('on')});li.classList.add('on');showImg(m.img[i%m.img.length]);ptag.textContent=it[0]}
+      li.addEventListener('mouseenter',on);li.addEventListener('focus',on);li.addEventListener('click',on);
+      list.appendChild(li);if(i===0)on();
+    });
+  }
+  renderTabs();renderList();
+
+  /* ---------- strength ---------- */
+  var LV=[
+   {t:'Gentle',c:'#e8c9a0',d:'Pure matcha',s:'Soft, grassy, easy. Start here.'},
+   {t:'Smooth',c:'#8ea83a',d:'Oat milk matcha',s:'Creamy and bright, our most ordered.'},
+   {t:'Balanced',c:'#a9693a',d:'Cream cold brew',s:'Cold brew softened with sweet cream.'},
+   {t:'Strong',c:'#5b3412',d:'Classic cold brew',s:'Eighteen hours of depth, black.'},
+   {t:'Bold',c:'#26140a',d:'Double shot cold brew',s:'Twice the concentrate. You asked.'}];
+  var rng=$('#rng'),orb=$('#orb'),otx=$('#orbtxt'),rec=$('#rec');
+  function strength(){var l=LV[+rng.value-1];orb.style.background='radial-gradient(circle at 32% 28%,rgba(255,255,255,.55),'+l.c+' 55%)';orb.style.transform='scale('+(.82+.1*(+rng.value))+')';otx.textContent=l.t;rec.innerHTML='Try the <b>'+l.d+'</b>. '+l.s}
+  rng.addEventListener('input',strength);strength();
+
+  /* ---------- order form ---------- */
+  var fd=$('#fd'),ft=$('#ft');
+  allDrinks.forEach(function(d){var o=document.createElement('option');o.textContent=d;fd.appendChild(o)});
+  ['7:30 am','8:00 am','8:30 am','9:00 am','12:00 pm','12:30 pm','1:00 pm','3:00 pm','3:30 pm','4:00 pm'].forEach(function(t){var o=document.createElement('option');o.textContent=t;ft.appendChild(o)});
+  $('#form').addEventListener('submit',function(e){e.preventDefault();$('#ok').textContent='Thanks, '+$('#fn').value+'! Your '+fd.value+' will be ready at '+ft.value+'.'});
+  var days=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  $('#hours').innerHTML=days.map(function(d,i){return '<li><span>'+d+'</span><span>'+(i<5?'7:00 am – 6:00 pm':'8:00 am – 5:00 pm')+'</span></li>'}).join('');
+
+  /* ---------- reveal + counters ---------- */
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;e.target.classList.add('in');io.unobserve(e.target);
+    [].forEach.call(e.target.querySelectorAll('[data-count]'),count)})},{threshold:.18});
+  [].forEach.call(document.querySelectorAll('.rv'),function(el){io.observe(el)});
+  function count(b){var to=+b.dataset.count,small=b.querySelector('small'),suf=small?small.outerHTML:'',t0=performance.now();
+    function f(t){var p=Math.min(1,(t-t0)/1400),e=1-Math.pow(1-p,3);b.innerHTML=Math.round(to*e)+suf;if(p<1)requestAnimationFrame(f)}
+    if(reduce){b.innerHTML=to+suf}else requestAnimationFrame(f)}
+
+  /* ---------- scroll-scrubbed videos ---------- */
+  var tracks=[].slice.call(document.querySelectorAll('.track')),vids=[],unlocked=false;
+  function unlock(){if(unlocked)return;unlocked=true;vids.forEach(function(o){var p=o.v.play();if(p&&p.then)p.then(function(){o.v.pause()}).catch(function(){})})}
+  addEventListener('touchstart',unlock,{passive:true,once:true});addEventListener('pointerdown',unlock,{once:true});
+  tracks.forEach(function(track){
+    var v=track.querySelector('video'),poster=track.querySelector('.poster');
+    var o={v:v,track:track,dur:0,cur:0,ready:false,steps:[].slice.call(track.querySelectorAll('.steps li')),info:track.querySelector('.info'),bar:track.querySelector('.bar i'),hint:track.querySelector('.hint'),STOPS:track.dataset.stops.split(',').map(Number)};
+    vids.push(o);
+    v.addEventListener('loadedmetadata',function(){o.dur=v.duration||6;o.ready=true;v.pause();v.currentTime=.001});
+    v.addEventListener('loadeddata',function(){poster.style.transition='opacity .4s';poster.style.opacity=0});
+    v.load();
+  });
+  function progress(t){var r=t.getBoundingClientRect(),max=r.height-innerHeight;return Math.min(1,Math.max(0,-r.top/Math.max(1,max)))}
+  var sw=[].slice.call(document.querySelectorAll('#switch a')),swEl=$('#switch'),nav=$('#nav');
+  var pages=[].slice.call(document.querySelectorAll('[data-nav]'));
+  function tick(){
+    var vh=innerHeight,active=tracks[0];
+    vids.forEach(function(o){
+      var r=o.track.getBoundingClientRect();
+      if(r.top<vh*.5&&r.bottom>vh*.5)active=o.track;
+      if(r.top<vh*1.1)o.track.classList.add('in');
+      if(r.bottom<-vh||r.top>vh*2)return;
+      var target=progress(o.track);
+      o.cur+=(target-o.cur)*(reduce?1:.14);
+      if(Math.abs(target-o.cur)<.0004)o.cur=target;
+      if(o.ready&&o.dur){var t=Math.min(o.dur-.05,Math.max(.001,o.cur*(o.dur-.05)));if(Math.abs(o.v.currentTime-t)>.008&&!o.v.seeking)o.v.currentTime=t}
+      var p=o.cur,idx=0;for(var i=0;i<o.STOPS.length;i++)if(p>=o.STOPS[i])idx=i;
+      o.steps.forEach(function(li,i){li.classList.toggle('on',i===idx);li.classList.toggle('done',i<idx)});
+      o.info.classList.toggle('show',p>.82||reduce);
+      o.bar.style.transform='scaleY('+p+')';
+      o.hint.style.opacity=p>.03?0:1;
+    });
+    sw.forEach(function(a){a.classList.toggle('on',a.dataset.t===active.id)});
+    /* header: theme + switch visibility */
+    var probe=40,theme='dark',inHero=false;
+    pages.forEach(function(s){var r=s.getBoundingClientRect();if(r.top<=probe&&r.bottom>probe){theme=s.dataset.nav;inHero=s.classList.contains('track')}});
+    nav.classList.toggle('light',theme==='light');swEl.classList.toggle('hide',!inHero);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  /* ---------- anchors ---------- */
+  sw.forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();window.scrollTo({top:document.getElementById(a.dataset.t).offsetTop,behavior:reduce?'auto':'smooth'})})});
+  [].forEach.call(document.querySelectorAll('.nav a[href^="#"]'),function(a){a.addEventListener('click',function(e){var t=document.querySelector(a.getAttribute('href'));if(!t)return;e.preventDefault();window.scrollTo({top:t.getBoundingClientRect().top+scrollY,behavior:reduce?'auto':'smooth'})})});
+})();
+</script>
+</body>
+</html>
